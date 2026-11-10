@@ -74,7 +74,12 @@ export default function ScrollSnake() {
 
   useEffect(() => {
     if (reducedMotion()) return undefined
+    let lastY = -1
     const update = () => {
+      // skip sub-pixel scroll events — rebuilding the path is the only
+      // expensive part of this component
+      if (Math.abs(window.scrollY - lastY) < 1) return
+      lastY = window.scrollY
       const max = document.documentElement.scrollHeight - window.innerHeight
       const p = max > 0 ? Math.min(window.scrollY / max, 1) : 0
       const { body, spots, head } = build(-window.scrollY / 38)

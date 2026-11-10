@@ -7,28 +7,53 @@ import { logo, PATTERN } from '../brand.js'
 const IMG = (name) => `/Images/web/${name}.jpg`
 
 // The gallery as an exhibition: four chapters, scrolled like a story.
+// TODO: floor-plan paragraphs to be rewritten in the founders' brand voice
+// (possibly a personal note from the founders) — wording from Yash/Khush.
 const PLANS = [
   {
     label: 'First floor — beds 01–03, kitchen, bar, living',
     src: IMG('first-floor-general-layout'),
     wide: true,
+    text: 'Three bedrooms, the kitchen, the bar and the living room share one floor — so mornings start together and nobody is ever far from the coffee.',
   },
-  { label: 'Second floor', src: IMG('second-floor-general-layout') },
-  { label: 'House dimensions', src: IMG('floor-plan-with-house-dimensions') },
-  { label: 'Top view — plan sections', src: IMG('top-view-floor-plan-sections') },
+  {
+    label: 'Second floor',
+    src: IMG('second-floor-general-layout'),
+    text: 'Two more bedrooms, two baths and the sound lounge — a second living room built for records, late conversations and slow nights.',
+  },
+  {
+    label: 'House dimensions',
+    src: IMG('floor-plan-with-house-dimensions'),
+    text: 'The full footprint with measurements — how much house there actually is, wall to wall.',
+  },
+  {
+    label: 'Top view — plan sections',
+    src: IMG('top-view-floor-plan-sections'),
+    text: 'The whole plan from above, cut into sections — how the rooms connect and where the light comes in.',
+  },
   {
     label: 'Dining & sound lounge — furniture plan',
     src: IMG('dining-and-sound-lounge'),
+    text: 'The long table and the listening corner, drawn piece by piece — a furniture plan for the rooms where everyone ends up.',
   },
 ]
 
+// Order per Nov 6 touchbase: Sound Lounge first (rendering may not be
+// final), upper deck next, then the rest.
+// TODO (waiting on Yash/Khush):
+//  - Coffee bar "before" should be the pantry — photo coming.
+//  - Exterior before/after using the matching "before" angle from the
+//    shared photos link, plus paragraphs.
+//  - Missing "before" shots (back rooms) from the Matterport link in the
+//    design deck or Yash's remodel photos.
 const PAIRS = [
+  ['The sound lounge', 'sound-lounge-before', 'sound-lounge-after'],
+  ['The upper deck', 'before-upper-deck', 'after-upper-deck-renderings'],
+  ['The backyard — wellness garden', 'before-lower-deck', 'recreational-area'],
   ['The living room', 'living-room-1-before', 'living-room-1-after'],
   ['The lounge', 'living-room-2-before', 'living-room-2-after'],
   ['The dining room', 'dining-room-before', 'dining-room-after'],
   ['The bar', 'bar-before', 'bar-after'],
-  ['The sound lounge', 'sound-lounge-before', 'sound-lounge-after'],
-  ['The upper deck', 'before-upper-deck', 'after-upper-deck-renderings'],
   ['Bedroom 01', 'bedroom-1-before', 'bedroom-1-after'],
   ['Bedroom 01 — second angle', 'bedroom-1-before-other-pov', 'bedroom-1-after-other-pov'],
   ['Bedroom 02', 'bedroom-2-before', 'bedroom-2-after'],
@@ -38,10 +63,11 @@ const PAIRS = [
   ['Bedroom 05', 'bedroom-5-before', 'bedroom-5-after'],
 ]
 
-const CONCEPTS = [
+// These are renderings, not "concepts" — renamed per Nov 6 touchbase.
+const RENDERINGS = [
   { label: 'The entry — SAMAYA sign', src: IMG('concept') },
-  { label: 'Sound lounge — concept II', src: IMG('sound-lounge-after-2') },
-  { label: 'Bedroom 05 — concept II', src: IMG('bedroom-5-after-2') },
+  { label: 'Sound lounge — rendering II', src: IMG('sound-lounge-after-2') },
+  { label: 'Bedroom 05 — rendering II', src: IMG('bedroom-5-after-2') },
   { label: 'Wellness garden — furniture', src: IMG('recreational-area-furnitures') },
 ]
 
@@ -50,19 +76,49 @@ const EXTERIORS = [
     label: 'The whole hillside — aerial',
     src: IMG('the-view-different-angle-floorplan'),
     wide: true,
+    text: 'The house sits alone on its hillside — nothing between the decks and the red mountains.',
   },
-  { label: 'Top view — the property', src: IMG('top-view-general-layout') },
-  { label: 'The upper deck', src: IMG('after-upper-deck-renderings-2') },
-  { label: 'Upper deck — dining end', src: IMG('after-upper-deck-renderings-3') },
+  {
+    label: 'Top view — the property',
+    src: IMG('top-view-general-layout'),
+    text: 'The property from directly above — house, decks and wellness garden in one frame.',
+  },
+  {
+    label: 'The upper deck',
+    src: IMG('after-upper-deck-renderings-2'),
+    text: 'The upper deck faces the view straight on — morning coffee, golden hour, and everything in between.',
+  },
+  {
+    label: 'Upper deck — dining end',
+    src: IMG('after-upper-deck-renderings-3'),
+    text: 'The dining end of the deck — built for long dinners that keep going after the sun drops.',
+  },
   {
     label: 'Wellness garden — sauna & cold plunge',
     src: IMG('recreational-area'),
     wide: true,
+    text: 'Sauna, cold plunge and open sky — the wellness garden is a ritual, not an amenity.',
   },
-  { label: 'Wellness garden — entrance', src: IMG('recreational-area-entrance') },
-  { label: 'Aerial — from the view side', src: IMG('the-view-different-angle-floor-plan') },
-  { label: 'Aerial — second angle', src: IMG('general-view-different-angle-floorplan') },
-  { label: 'The lower deck — still a before', src: IMG('before-lower-deck') },
+  {
+    label: 'Wellness garden — entrance',
+    src: IMG('recreational-area-entrance'),
+    text: 'The path into the garden — tucked below the house, quiet by design.',
+  },
+  {
+    label: 'Aerial — from the view side',
+    src: IMG('the-view-different-angle-floor-plan'),
+    text: 'Seen from the view side — the whole house opens toward the mountains.',
+  },
+  {
+    label: 'Aerial — second angle',
+    src: IMG('general-view-different-angle-floorplan'),
+    text: 'A second pass from the air — the decks stepped into the slope of the hill.',
+  },
+  {
+    label: 'The lower deck — still a before',
+    src: IMG('before-lower-deck'),
+    text: 'The lower deck, still untouched — the next chapter of the build.',
+  },
 ]
 
 const CHAPTERS = [
@@ -79,10 +135,10 @@ const CHAPTERS = [
     blurb: 'What we found, and what we made of it. Drag the line.',
   },
   {
-    id: 'concept',
+    id: 'renderings',
     num: '03',
-    title: 'Concept',
-    blurb: 'The mood we are building toward — scroll sideways through the boards.',
+    title: 'Renderings',
+    blurb: 'The rooms as they will be — scroll sideways through the renderings.',
   },
   {
     id: 'exterior',
@@ -135,15 +191,23 @@ function Frames({ items }) {
           key={item.label}
           data-reveal
         >
-          <Parallax speed={0.04 + (i % 3) * 0.03}>
-            <Placeholder
-              label={item.label}
-              ratio={item.ratio || '16 / 9'}
-              src={item.src}
-              fit={item.fit}
-            />
-          </Parallax>
-          <p className="exhibit-caption">{item.label}</p>
+          <div className="exhibit-figure">
+            <Parallax speed={0.04 + (i % 3) * 0.03}>
+              <Placeholder
+                label={item.label}
+                ratio={item.ratio || '16 / 9'}
+                src={item.src}
+                fit={item.fit}
+              />
+            </Parallax>
+            {!item.text && <p className="exhibit-caption">{item.label}</p>}
+          </div>
+          {item.text && (
+            <div className="exhibit-side">
+              <h3 className="exhibit-side-title">{item.label}</h3>
+              <p className="exhibit-side-text">{item.text}</p>
+            </div>
+          )}
         </div>
       ))}
     </div>
@@ -206,9 +270,10 @@ export default function Gallery() {
             two years, one view, documented honestly
           </p>
           <p className="lead">
-            Labeled floor plans, honest befores beside their afters, concept
-            boards and the hillside itself. Final photography lands closer to
-            opening &mdash; this is the real work in progress.
+            Labeled floor plans, honest befores beside their afters,
+            renderings and the hillside itself. All images are renderings and
+            subject to change &mdash; final photography lands closer to
+            opening.
           </p>
           <div className="exhibit-toc">
             {CHAPTERS.map((c) => (
@@ -265,14 +330,14 @@ export default function Gallery() {
         </div>
       </Chapter>
 
-      {/* 03 — Concept: horizontal filmstrip */}
+      {/* 03 — Renderings: horizontal filmstrip */}
       <Chapter chapter={CHAPTERS[2]}>
         <div
           className="filmstrip"
           role="group"
-          aria-label="Concept boards — scrolls sideways"
+          aria-label="Renderings — scrolls sideways"
         >
-          {CONCEPTS.map((item) => (
+          {RENDERINGS.map((item) => (
             <figure className="filmstrip-panel" key={item.label}>
               <Placeholder label={item.label} ratio="1 / 1" src={item.src} />
               <figcaption className="exhibit-caption">{item.label}</figcaption>

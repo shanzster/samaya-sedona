@@ -2,71 +2,17 @@ import { useState } from 'react'
 import Placeholder from '../components/Placeholder.jsx'
 import { useReveal } from '../motion.js'
 import { logo, illo } from '../brand.js'
-import { FORM_ENDPOINT, PAYMENT_LINKS, CONTACT_EMAIL } from '../config.js'
+import {
+  FORM_ENDPOINT,
+  PAYMENT_LINKS,
+  CONTACT_EMAIL,
+  TIERS,
+  TIER_MATRIX,
+} from '../config.js'
 
-const TIERS = [
-  {
-    id: 'entry',
-    price: '$1',
-    name: 'Founding Entry',
-    flag: null,
-    tagline: 'For the curious',
-    blurb:
-      'A dollar is a handshake. It puts your name on the list, ahead of the public, for less than a gas-station coffee.',
-    perks: [
-      'Your name on the Founders’ List — permanently',
-      'The launch announcement before the public hears it',
-      'Basic entry subscription to the rental: first in line when the calendar opens',
-      'Founders-only launch pricing on your first stay',
-    ],
-  },
-  {
-    id: 'stories',
-    price: '$5',
-    name: 'Brand Stories',
-    flag: 'Most popular',
-    tagline: 'For the ones who want the whole story',
-    blurb:
-      'The build, documented honestly — the befores, the afters, and the weeks where nothing went right.',
-    perks: [
-      'Everything in Founding Entry',
-      'Biweekly build updates — photos, floor plans, setbacks included',
-      'The brand stories: why this house, why this hill, why Sedona',
-      'Early looks at rooms before they reach the public gallery',
-      'A say in the small calls — we poll members on finishes and details',
-    ],
-  },
-  {
-    id: 'early',
-    price: '$10',
-    name: 'Early Access',
-    flag: 'Best value',
-    tagline: 'For the trip leader',
-    blurb:
-      'If you already know who your eleven people are, this is the tier that gets you the good weekends.',
-    perks: [
-      'Everything in Brand Stories',
-      '2-week early booking window before the public calendar opens',
-      'First pick of opening-season dates — holidays and long weekends included',
-      'The finished photography, delivered before it is published anywhere',
-      'A personal heads-up email the day your window opens',
-    ],
-  },
-]
-
-// Comparison matrix — rows: [benefit, entry, stories, early]
-const MATRIX = [
-  ['Name on the Founders’ List', true, true, true],
-  ['Launch announcement before the public', true, true, true],
-  ['First in line when the calendar opens', true, true, true],
-  ['Founders-only launch pricing', true, true, true],
-  ['Biweekly build updates', false, true, true],
-  ['Brand stories & behind-the-scenes', false, true, true],
-  ['Member polls on finishes & details', false, true, true],
-  ['2-week early booking window', false, false, true],
-  ['First pick of opening-season dates', false, false, true],
-  ['Finished photography, first', false, false, true],
-]
+// TODO (idea from Nov 6 touchbase, pending approval): checkout upsell popup —
+// choosing $1 offers $25 plus a perk; choosing $10 offers $50 or $100, with
+// a countdown. Not built until tiers are final.
 
 const AFTER_PAY = [
   [
@@ -83,7 +29,7 @@ const AFTER_PAY = [
   ],
   [
     '4. Doors open',
-    'You book first, at Founders pricing. Then we meet you on the terrace.',
+    'You book first, at Founders pricing. Then we meet you on the deck.',
   ],
 ]
 
@@ -91,7 +37,7 @@ const AFTER_PAY = [
 const TIER_FAQS = [
   [
     'Is this a one-time payment or a subscription?',
-    'One-time. One dollar, five, or ten — once. Nothing renews, nothing auto-charges, there is no fine print that says otherwise.',
+    'One-time, never monthly. Whatever tier you pick, you pay it once. Nothing renews, nothing auto-charges, there is no fine print that says otherwise.',
   ],
   [
     'Can I get a refund?',
@@ -124,7 +70,13 @@ function Check({ yes }) {
 }
 
 export default function Campaign() {
-  const [form, setForm] = useState({ name: '', email: '', tier: 'early' })
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    consent: false,
+    tier: 'early',
+  })
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle') // idle | sending | done | error
   const done = status === 'done'
@@ -136,6 +88,10 @@ export default function Campaign() {
     if (!form.name.trim()) errs.name = 'Please tell us your name.'
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
       errs.email = 'Please enter a valid email address.'
+    if (!/^\+?[\d\s().-]{7,}$/.test(form.phone.trim()))
+      errs.phone = 'Please enter a valid phone number.'
+    if (!form.consent)
+      errs.consent = 'Please agree to receive texts to continue.'
     setErrors(errs)
     if (Object.keys(errs).length > 0) return
 
@@ -145,7 +101,7 @@ export default function Campaign() {
       // signup is ever silently lost.
       const subject = encodeURIComponent('Founders’ List — ' + tierName.name)
       const body = encodeURIComponent(
-        `Name: ${form.name}\nEmail: ${form.email}\nTier: ${tierName.price} ${tierName.name}\n\nPlease add me to the Founders’ List.`,
+        `Name: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nTier: ${tierName.price} ${tierName.name}\nText opt-in: yes\n\nPlease add me to the Founders’ List.`,
       )
       window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`
       setStatus('done')
@@ -160,6 +116,8 @@ export default function Campaign() {
         body: JSON.stringify({
           name: form.name,
           email: form.email,
+          phone: form.phone,
+          textOptIn: form.consent,
           tier: `${tierName.price} ${tierName.name}`,
         }),
       })
@@ -199,9 +157,9 @@ export default function Campaign() {
         <p className="eyebrow">Pre-launch campaign</p>
         <h1 className="display">Before the doors open</h1>
         <p className="lead">
-          Samaya Sedona opens soon. The Founders&rsquo; List is how we build
-          it with you watching &mdash; a dollar gets you in the door, ten
-          gets you through it two weeks before everyone else.
+          Samaya Sedona opens in 2027. The Founders&rsquo; List is how we
+          build it with you watching &mdash; a single one-time payment, never
+          monthly, gets you in the door before everyone else.
         </p>
         <p className="accent-line">built in the open, booked by the people watching</p>
       </section>
@@ -257,13 +215,15 @@ export default function Campaign() {
                   <th scope="col">
                     <span className="sr-only">Benefit</span>
                   </th>
-                  <th scope="col">$1 Entry</th>
-                  <th scope="col">$5 Stories</th>
-                  <th scope="col">$10 Early</th>
+                  {TIERS.map((t) => (
+                    <th scope="col" key={t.id}>
+                      {t.price} {t.name.split(' ').pop()}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
-                {MATRIX.map(([benefit, a, b, c]) => (
+                {TIER_MATRIX.map(([benefit, a, b, c]) => (
                   <tr key={benefit}>
                     <th scope="row">{benefit}</th>
                     <td>
@@ -364,11 +324,57 @@ export default function Campaign() {
                   </a>
                 </p>
               )}
+              {/* Confirmation with pictures, then on to the gallery */}
+              <div className="card-grid" style={{ marginTop: 'var(--sp-5)' }}>
+                <Placeholder
+                  label="The upper deck"
+                  ratio="4 / 3"
+                  src="/Images/web/after-upper-deck-renderings-2.jpg"
+                />
+                <Placeholder
+                  label="The wellness garden"
+                  ratio="4 / 3"
+                  src="/Images/web/recreational-area.jpg"
+                />
+              </div>
+              <p>
+                <a className="btn btn--secondary" href="#/gallery">
+                  See what you just backed &rarr; the gallery
+                </a>
+              </p>
             </div>
           ) : (
             <form className="inquiry-form" onSubmit={submit} noValidate>
               {field('name', 'Name')}
               {field('email', 'Email', 'email')}
+              {field('phone', 'Phone number', 'tel')}
+              <div
+                className={`field field--consent${errors.consent ? ' field-error' : ''}`}
+              >
+                <label className="consent-label" htmlFor="f-consent">
+                  <input
+                    id="f-consent"
+                    type="checkbox"
+                    checked={form.consent}
+                    aria-invalid={Boolean(errors.consent)}
+                    onChange={(e) =>
+                      setForm({ ...form, consent: e.target.checked })
+                    }
+                  />
+                  <span className="small">
+                    {/* TODO: final SMS consent + privacy policy text pending */}
+                    I agree to receive occasional text messages about the
+                    launch, and I accept the{' '}
+                    <a href="#/privacy">privacy policy</a>. Message and data
+                    rates may apply; reply STOP to opt out.
+                  </span>
+                </label>
+                {errors.consent && (
+                  <p className="error-msg" role="alert">
+                    <span aria-hidden="true">&#9888;</span> {errors.consent}
+                  </p>
+                )}
+              </div>
               <div className="field">
                 <label htmlFor="f-tier">Tier</label>
                 <select

@@ -37,7 +37,7 @@ export default function Footer() {
               alt=""
               aria-hidden="true"
             />
-            <p className="small">Phoenix, Arizona</p>
+            <p className="small">Sedona, Arizona</p>
             <p className="small">
               <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
             </p>
@@ -52,6 +52,9 @@ export default function Footer() {
           <span>&copy; 2026 Samaya Sedona</span>
           <span>Every booking begins with a real conversation.</span>
         </div>
+        <p className="small footer-disclaimer">
+          All images are renderings and subject to change.
+        </p>
       </div>
     </footer>
   )

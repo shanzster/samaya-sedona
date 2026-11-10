@@ -634,16 +634,71 @@
 }
 
 .exhibit-item {
-  width: min(680px, 86%);
+  display: grid;
+  grid-template-columns: minmax(0, 680px) minmax(240px, 1fr);
+  gap: var(--sp-7);
+  align-items: center;
   margin-bottom: var(--sp-9);
 }
 
-.exhibit-item--right {
-  margin-left: auto;
+.exhibit-item .exhibit-figure {
+  min-width: 0;
+}
+
+.exhibit-item--right .exhibit-figure {
+  order: 2;
+}
+
+.exhibit-item--right .exhibit-side {
+  order: 1;
+  text-align: right;
 }
 
 .exhibit-item--wide {
-  width: 100%;
+  grid-template-columns: 1fr;
+}
+
+.exhibit-item--wide .exhibit-figure,
+.exhibit-item--wide .exhibit-side {
+  order: 0;
+  text-align: left;
+}
+
+.exhibit-item--wide .exhibit-side {
+  max-width: 60ch;
+}
+
+.exhibit-side-title {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--desert-beige);
+  margin-bottom: var(--sp-3);
+}
+
+.exhibit-side-text {
+  font-size: var(--text-body);
+  line-height: 1.7;
+  color: var(--sand, #e8ddcb);
+  opacity: 0.85;
+}
+
+@media (max-width: 820px) {
+  .exhibit-item,
+  .exhibit-item--right {
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+
+  .exhibit-item--right .exhibit-figure {
+    order: 0;
+  }
+
+  .exhibit-item--right .exhibit-side {
+    order: 0;
+    text-align: left;
+  }
 }
 
 .exhibit-caption {
@@ -839,6 +894,9 @@
      cards, images and bands — the snake lives in the background layer */
   z-index: -1;
   pointer-events: none;
+  /* scroll-driven transform — keep it on its own compositor layer */
+  will-change: transform;
+  contain: strict;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1445,4 +1503,85 @@
 .skip-link:focus {
   left: var(--sp-4);
   top: var(--sp-4);
+}
+
+/* ---------- Nov 6 revisions ---------- */
+
+/* hero slot — video / collage variants (config-driven, see config.js) */
+.hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-collage {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 1.4fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 4px;
+}
+
+.hero-collage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-collage img:first-child {
+  grid-row: 1 / -1;
+}
+
+/* "Shape of a day" — tentative house-mural background.
+   TODO: drop the mural from the shared photos link into /public and set:
+   .section--rituals { --rituals-mural: url('/Images/house-mural.jpg'); } */
+.section--rituals {
+  background-image: var(--rituals-mural, none);
+  background-size: cover;
+  background-position: center;
+}
+
+/* founders video slot */
+.founders-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--deep-canyon, #3b2416);
+}
+
+.founders-video--placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  text-align: center;
+  padding: var(--sp-6);
+  border: 1px dashed var(--canyon-leather);
+  background: transparent;
+  color: inherit;
+}
+
+/* SMS consent checkbox */
+.field--consent .consent-label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  cursor: pointer;
+}
+
+.field--consent input[type='checkbox'] {
+  margin-top: 0.3em;
+  width: 1.1em;
+  height: 1.1em;
+  flex: none;
+  accent-color: var(--canyon-leather);
+}
+
+/* renderings disclaimer pinned below everything */
+.footer-disclaimer {
+  margin-top: var(--sp-4);
+  opacity: 0.7;
+  text-align: center;
 }
