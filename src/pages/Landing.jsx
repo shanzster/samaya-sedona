@@ -236,7 +236,7 @@ export default function Landing() {
         />
         <div className="hero-content container">
           <p className="accent-line">
-            Restore together
+            Restored, Together
           </p>
           <h1 className="hero-title">
             Samaya <span className="hero-title-accent">Sedona</span>
