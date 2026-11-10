@@ -1,0 +1,166 @@
+/* Samaya Sedona — design tokens per design.md */
+
+@font-face {
+  font-family: "Napili";
+  src: url("/fonts/heading.otf") format("opentype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Samaya Accent";
+  src: url("/fonts/accent.ttf") format("truetype");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/body.ttf") format("truetype");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+:root {
+  /* §4.1 Brand color */
+  --deep-canyon: #4c2c16;
+  --moss: #3c3113;
+  --sedona-clay: #632010;
+  --canyon-leather: #9b6e48;
+  --desert-beige: #cdaf95;
+  --sand: #f5eee9;
+
+  /* §4.2 Functional (proposed, pending sign-off) */
+  --error: #9a2b12;
+  --success: #4a5d2a;
+  --notice: #8a5a14;
+  --focus: #632010;
+
+  /* §3.2 Type */
+  --font-display: "Napili", "Oswald", sans-serif;
+  --font-accent: "Samaya Accent", "Caveat", cursive;
+  --font-body: "Poppins", system-ui, sans-serif;
+
+  --text-hero: clamp(2.75rem, 9vw, 7rem);
+  --text-display: clamp(2.25rem, 6vw, 4.5rem);
+  --text-h2: clamp(1.75rem, 4vw, 3rem);
+  --text-h3: 1.25rem;
+  --text-accent: clamp(1.5rem, 3vw, 2.25rem);
+  --text-lead: clamp(1.125rem, 2vw, 1.375rem);
+  --text-body: 1.0625rem;
+  --text-small: 0.875rem;
+  --text-cta: 0.875rem;
+
+  /* §5.1 Grid */
+  --container-max: 1440px;
+  --content-max: 1280px;
+  --measure: 72ch;
+  --gutter-sm: 24px;
+  --gutter-lg: 32px;
+
+  /* §5.2 Spacing */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+  --sp-9: 96px;
+  --sp-10: 128px;
+  --sp-11: 192px;
+
+  /* §7 Motion */
+  --dur-fast: 200ms;
+  --dur-base: 400ms;
+  --dur-slow: 700ms;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Section rhythm: --sp-9 mobile, --sp-11 desktop */
+  --section-pad: var(--sp-9);
+  --edge-pad: var(--sp-5);
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --section-pad: var(--sp-11);
+    --edge-pad: var(--sp-7);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--sand);
+  color: var(--deep-canyon);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+h1,
+h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+h3 {
+  font-family: var(--font-body);
+  font-size: var(--text-h3);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+p {
+  max-width: var(--measure);
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+/* §10 visible focus everywhere */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.dark-surface :focus-visible {
+  outline-color: var(--sand);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+    scroll-behavior: auto;
+  }
+}

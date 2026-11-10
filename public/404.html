@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Samaya Sedona</title>
+    <!-- Static-host fallback: /founders -> /#/founders -->
+    <script>
+      var path = location.pathname.replace(/^\/+|\/+$/g, '')
+      location.replace('/' + (path ? '#/' + path : ''))
+    </script>
+  </head>
+  <body></body>
+</html>
