@@ -1640,15 +1640,3 @@
   opacity: 0.45;
   cursor: not-allowed;
 }
-
-/* draft banner on the terms page — remove once terms are approved */
-.draft-banner {
-  display: inline-block;
-  padding: var(--sp-2) var(--sp-4);
-  border: 1px dashed var(--notice);
-  border-radius: 4px;
-  color: var(--notice);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}

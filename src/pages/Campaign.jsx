@@ -28,8 +28,7 @@ const AFTER_PAY = [
   ],
 ]
 
-// Refund terms drafted as NON-REFUNDABLE per Nov 11 direction — final
-// language is Yash's call; the full draft lives at #/terms.
+// Payments are NON-REFUNDABLE (Nov 11 direction) — full terms at #/terms.
 const TIER_FAQS = [
   [
     'Is this a one-time payment or a subscription?',

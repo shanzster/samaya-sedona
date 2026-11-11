@@ -6,9 +6,8 @@ writing** — together with the timestamped checkout confirmation
 (`termsAccepted` / `termsAcceptedAt` fields the form submits), this is the
 evidence pack for any card dispute.
 
-**Status: DRAFT.** The refund language mirrors `src/pages/Terms.jsx` and is
-pending Yash's approval. If the terms page changes, change this email to
-match — the two must never disagree.
+The refund language mirrors `src/pages/Terms.jsx`. If the terms page
+changes, change this email to match — the two must never disagree.
 
 ## Wiring it up (Klaviyo + Stripe — decided Nov 11)
 

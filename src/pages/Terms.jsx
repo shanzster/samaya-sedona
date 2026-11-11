@@ -1,8 +1,7 @@
 import { CONTACT_EMAIL, OPENING_YEAR } from '../config.js'
 
-// DRAFT — refund terms are Yash's call. This page must be approved by Yash
-// (and ideally reviewed by counsel) before launch. Remove the draft banner
-// below once approved. Plain-language, same voice as the privacy policy.
+// Plain-language terms, same voice as the privacy policy. This copy is
+// mirrored in emails/founders-confirmation.html — keep the two in sync.
 const SECTIONS = [
   [
     'What you are buying',
@@ -59,11 +58,6 @@ export default function Terms() {
           open, you get every dollar back.
         </p>
         <p className="small">Effective November 2026</p>
-        {/* Remove this banner once Yash signs off on the refund terms. */}
-        <p className="draft-banner small" role="note">
-          <strong>Draft</strong> &mdash; pending final approval. Not yet
-          binding.
-        </p>
       </section>
 
       <section className="container" style={{ paddingBottom: 'var(--section-pad)' }}>
