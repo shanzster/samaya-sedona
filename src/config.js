@@ -2,13 +2,33 @@
 // Everything a client call can change lives here so copy/amounts swap
 // without touching components.
 
-// Form backend (e.g. Formspree: https://formspree.io → 'https://formspree.io/f/XXXXXXXX').
-// While empty, signups fall back to a prefilled email to CONTACT_EMAIL so no
-// lead is ever silently lost.
+// Klaviyo — primary lead destination once the account exists.
+// Setup (10 minutes, free tier is fine):
+//   1. Create the account at klaviyo.com.
+//   2. companyId: Settings → Organization → "Public API Key / Site ID"
+//      (6-character code, safe to ship in frontend code).
+//   3. listId: Lists & Segments → create a list "Founders' List" → the ID
+//      is in the list's URL (also 6 characters).
+// Signups then land as Klaviyo profiles with tier, SMS opt-in, and the
+// timestamped terms acceptance as custom properties, subscribed to the list.
+// The confirmation email (emails/founders-confirmation.html) becomes a
+// Klaviyo flow: Flows → "Added to list" trigger → paste the HTML in.
+export const KLAVIYO = {
+  companyId: '', // public Site ID — NOT the private sk_ key
+  listId: '',
+}
+
+// Optional backup form backend (e.g. Formspree: https://formspree.io →
+// 'https://formspree.io/f/XXXXXXXX'). If set alongside Klaviyo, signups go
+// to both. While both are empty, signups fall back to a prefilled email to
+// CONTACT_EMAIL so no lead is ever silently lost.
 export const FORM_ENDPOINT = ''
 
-// Stripe Payment Links per tier (https://dashboard.stripe.com/payment-links).
-// TODO: Stripe API keys pending from Yash/Khush.
+// Stripe Payment Links per tier (https://dashboard.stripe.com/payment-links)
+// — confirmed Nov 11: payments run on Stripe. Create one Payment Link per
+// tier and paste the URLs here. In each link's settings, enable the custom
+// consent checkbox and point it at /#/terms so acceptance is also recorded
+// on the Stripe side (second leg of the dispute defense).
 // While empty, the confirmation screen says the link arrives by email.
 export const PAYMENT_LINKS = {
   entry: '',

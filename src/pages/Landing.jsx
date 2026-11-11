@@ -167,7 +167,7 @@ const FAQS = [
   ],
   [
     'Is the Founders’ List payment one-time?',
-    'Yes — one-time, never monthly. Nothing renews, nothing auto-charges. If you change your mind before we open, email us and we will refund it.',
+    'Yes — one-time, never monthly. Nothing renews, nothing auto-charges. Payments are non-refundable (you are backing a house that is not finished yet), and we ask you to confirm that before you pay — the full terms are on the Terms & Refund Policy page.',
   ],
   [
     'Is this a hotel?',

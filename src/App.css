@@ -1585,3 +1585,70 @@
   opacity: 0.7;
   text-align: center;
 }
+
+/* ---------- non-refundable confirmation modal ---------- */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: var(--edge-pad);
+  background: rgba(76, 44, 22, 0.55); /* deep-canyon scrim */
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  max-width: 34rem;
+  width: 100%;
+  max-height: 90dvh;
+  overflow-y: auto;
+  background: var(--sand);
+  color: var(--deep-canyon);
+  border: 1px solid var(--canyon-leather);
+  border-radius: 4px;
+  padding: var(--sp-6);
+}
+
+.modal .consent-label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  cursor: pointer;
+  padding: var(--sp-4);
+  border: 1px solid var(--canyon-leather);
+  border-radius: 4px;
+}
+
+.modal .consent-label input[type='checkbox'] {
+  margin-top: 0.3em;
+  width: 1.1em;
+  height: 1.1em;
+  flex: none;
+  accent-color: var(--sedona-clay);
+}
+
+.modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  align-items: center;
+}
+
+.modal .btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* draft banner on the terms page — remove once terms are approved */
+.draft-banner {
+  display: inline-block;
+  padding: var(--sp-2) var(--sp-4);
+  border: 1px dashed var(--notice);
+  border-radius: 4px;
+  color: var(--notice);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}

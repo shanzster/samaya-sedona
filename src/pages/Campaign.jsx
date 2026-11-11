@@ -1,14 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Placeholder from '../components/Placeholder.jsx'
 import { useReveal } from '../motion.js'
 import { logo, illo } from '../brand.js'
-import {
-  FORM_ENDPOINT,
-  PAYMENT_LINKS,
-  CONTACT_EMAIL,
-  TIERS,
-  TIER_MATRIX,
-} from '../config.js'
+import { CONTACT_EMAIL, TIERS, TIER_MATRIX } from '../config.js'
+import { submitLead, HAS_BACKEND } from '../leads.js'
 
 // TODO (idea from Nov 6 touchbase, pending approval): checkout upsell popup —
 // choosing $1 offers $25 plus a perk; choosing $10 offers $50 or $100, with
@@ -33,7 +28,8 @@ const AFTER_PAY = [
   ],
 ]
 
-// TODO: client to confirm refund terms and payment processor before launch
+// Refund terms drafted as NON-REFUNDABLE per Nov 11 direction — final
+// language is Yash's call; the full draft lives at #/terms.
 const TIER_FAQS = [
   [
     'Is this a one-time payment or a subscription?',
@@ -41,7 +37,11 @@ const TIER_FAQS = [
   ],
   [
     'Can I get a refund?',
-    'Yes. Any tier, any reason, any time before opening day — one email to hello@samayasedona.com and it comes back in full.',
+    'No — Founders’ List payments are non-refundable, and we ask you to confirm that before you pay. You are backing a house that is not finished yet: if the opening slips, your perks carry forward unchanged; if we ever cancel the project outright, every dollar comes back. The full terms are one click away.',
+  ],
+  [
+    'What happens if the opening is delayed?',
+    'Nothing changes about what you bought. Your place in line, your updates, and your perks all carry forward to the new date — a delay is not grounds for a refund, and we say so plainly before you pay. If the project is ever permanently cancelled, every payment is refunded in full within 30 days.',
   ],
   [
     'Can I upgrade later?',
@@ -78,11 +78,25 @@ export default function Campaign() {
     tier: 'early',
   })
   const [errors, setErrors] = useState({})
-  const [status, setStatus] = useState('idle') // idle | sending | done | error
-  const done = status === 'done'
+  const [status, setStatus] = useState('idle') // idle | confirming | sending | error
+  const [agreed, setAgreed] = useState(false) // terms checkbox inside the modal
+  const modalRef = useRef(null)
   useReveal()
 
-  async function submit(e) {
+  // The non-refundable confirmation dialog: trap initial focus and let
+  // Escape back out. The recorded acceptance is our dispute evidence, so
+  // nothing is submitted until the modal's own checkbox + button are used.
+  useEffect(() => {
+    if (status !== 'confirming') return
+    modalRef.current?.querySelector('input')?.focus()
+    const onKey = (e) => {
+      if (e.key === 'Escape') setStatus('idle')
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [status])
+
+  function submit(e) {
     e.preventDefault()
     const errs = {}
     if (!form.name.trim()) errs.name = 'Please tell us your name.'
@@ -95,33 +109,50 @@ export default function Campaign() {
     setErrors(errs)
     if (Object.keys(errs).length > 0) return
 
+    setAgreed(false)
+    setStatus('confirming')
+  }
+
+  function finish() {
+    sessionStorage.setItem(
+      'samaya-signup',
+      JSON.stringify({ name: form.name.trim(), tier: form.tier }),
+    )
+    window.location.hash = '#/thanks'
+  }
+
+  async function confirmAndSend() {
     const tierName = TIERS.find((t) => t.id === form.tier)
-    if (!FORM_ENDPOINT) {
+    const termsAcceptedAt = new Date().toISOString()
+
+    if (!HAS_BACKEND) {
       // No backend configured yet — hand off via a prefilled email so no
       // signup is ever silently lost.
       const subject = encodeURIComponent('Founders’ List — ' + tierName.name)
       const body = encodeURIComponent(
-        `Name: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nTier: ${tierName.price} ${tierName.name}\nText opt-in: yes\n\nPlease add me to the Founders’ List.`,
+        `Name: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nTier: ${tierName.price} ${tierName.name}\nText opt-in: yes\nTerms & Refund Policy accepted (non-refundable): ${termsAcceptedAt}\n\nPlease add me to the Founders’ List.`,
       )
       window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`
-      setStatus('done')
+      finish()
       return
     }
 
     setStatus('sending')
     try {
-      const res = await fetch(FORM_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          textOptIn: form.consent,
-          tier: `${tierName.price} ${tierName.name}`,
-        }),
+      const ok = await submitLead({
+        name: form.name.trim(),
+        email: form.email,
+        phone: form.phone,
+        textOptIn: form.consent,
+        tier: `${tierName.price} ${tierName.name}`,
+        // Dispute evidence: the member confirmed the non-refundable terms
+        // in the checkout modal at this moment.
+        termsAccepted: true,
+        termsAcceptedAt,
+        termsVersion: 'November 2026',
       })
-      setStatus(res.ok ? 'done' : 'error')
+      if (ok) finish()
+      else setStatus('error')
     } catch {
       setStatus('error')
     }
@@ -187,7 +218,8 @@ export default function Campaign() {
                 ))}
               </ul>
               <p className="small tier-fine">
-                One-time. Refundable until opening day.
+                One-time and non-refundable &mdash;{' '}
+                <a href="#/terms">terms &amp; refund policy</a>.
               </p>
               <button
                 type="button"
@@ -261,10 +293,13 @@ export default function Campaign() {
                 aria-hidden="true"
               />
               <p className="small">
-                <strong>The promise:</strong> every tier is one-time, fully
-                refundable until opening day, and processed by a secure
-                payment provider &mdash; your card never touches our
-                servers. Questions first?{' '}
+                <strong>The promise, in plain terms:</strong> every tier is
+                one-time and non-refundable &mdash; you are backing a house
+                that is not finished, and if the opening slips your perks
+                carry forward. Payments run through a secure payment
+                provider; your card never touches our servers. Read the{' '}
+                <a href="#/terms">Terms &amp; Refund Policy</a> first, or
+                ask us anything:{' '}
                 <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
               </p>
             </div>
@@ -304,47 +339,7 @@ export default function Campaign() {
             />
           </div>
           <div className="rail-divider" aria-hidden="true"></div>
-          {done ? (
-            <div className="form-confirm stack fade-in" role="status">
-              <p className="accent-line">welcome to the list</p>
-              <p>
-                You&rsquo;re in, {form.name.trim()}.{' '}
-                {FORM_ENDPOINT
-                  ? 'Watch your inbox — the first update is on its way.'
-                  : 'Your email app just opened with your signup drafted — hit send and you’re done.'}
-              </p>
-              {PAYMENT_LINKS[form.tier] && (
-                <p>
-                  <a
-                    className="btn btn--primary"
-                    href={PAYMENT_LINKS[form.tier]}
-                  >
-                    Complete your {TIERS.find((t) => t.id === form.tier).price}{' '}
-                    payment
-                  </a>
-                </p>
-              )}
-              {/* Confirmation with pictures, then on to the gallery */}
-              <div className="card-grid" style={{ marginTop: 'var(--sp-5)' }}>
-                <Placeholder
-                  label="The upper deck"
-                  ratio="4 / 3"
-                  src="/Images/web/after-upper-deck-renderings-2.jpg"
-                />
-                <Placeholder
-                  label="The wellness garden"
-                  ratio="4 / 3"
-                  src="/Images/web/recreational-area.jpg"
-                />
-              </div>
-              <p>
-                <a className="btn btn--secondary" href="#/gallery">
-                  See what you just backed &rarr; the gallery
-                </a>
-              </p>
-            </div>
-          ) : (
-            <form className="inquiry-form" onSubmit={submit} noValidate>
+          <form className="inquiry-form" onSubmit={submit} noValidate>
               {field('name', 'Name')}
               {field('email', 'Email', 'email')}
               {field('phone', 'Phone number', 'tel')}
@@ -407,13 +402,86 @@ export default function Campaign() {
               )}
               <p className="small">
                 Payment is collected after signup &mdash; we&rsquo;ll email
-                you a secure link. One-time, refundable, no spam, no
+                you a secure link. One-time and{' '}
+                <strong>non-refundable</strong> (full details in the{' '}
+                <a href="#/terms">Terms &amp; Refund Policy</a>). No spam, no
                 countdown timers, ever.
               </p>
             </form>
-          )}
         </div>
       </section>
+
+      {/* Non-refundable confirmation — nothing is submitted until the
+          member ticks the box and confirms. Their acceptance is timestamped
+          and sent with the signup as chargeback/dispute evidence. */}
+      {(status === 'confirming' || status === 'sending') && (
+        <div
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setStatus('idle')
+          }}
+        >
+          <div
+            className="modal stack"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="confirm-title"
+            ref={modalRef}
+          >
+            <p className="eyebrow">Before you join</p>
+            <h2 className="h3-heading" id="confirm-title">
+              Are you sure? This payment is non-refundable.
+            </h2>
+            <p className="small">
+              You&rsquo;re choosing the{' '}
+              <strong>
+                {TIERS.find((t) => t.id === form.tier).price}{' '}
+                {TIERS.find((t) => t.id === form.tier).name}
+              </strong>{' '}
+              tier &mdash; one-time, never monthly. Samaya Sedona is still
+              being built: if the opening date slips, your perks carry
+              forward, but your payment cannot be refunded. The only
+              exception: if the project is permanently cancelled, you get a
+              full refund.
+            </p>
+            <label className="consent-label small" htmlFor="f-terms">
+              <input
+                id="f-terms"
+                type="checkbox"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+              />
+              <span>
+                I have read and agree to the{' '}
+                <a href="#/terms" target="_blank" rel="noreferrer">
+                  Terms &amp; Refund Policy
+                </a>
+                , and I understand this payment is{' '}
+                <strong>non-refundable</strong>.
+              </span>
+            </label>
+            <div className="modal-actions">
+              <button
+                type="button"
+                className="btn btn--primary"
+                disabled={!agreed || status === 'sending'}
+                onClick={confirmAndSend}
+              >
+                {status === 'sending'
+                  ? 'Joining…'
+                  : 'I understand — join the list'}
+              </button>
+              <button
+                type="button"
+                className="btn btn--ghost"
+                onClick={() => setStatus('idle')}
+              >
+                Go back
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Tier FAQ — money questions answered before they're asked */}
       <section className="section">

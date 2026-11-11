@@ -1,0 +1,104 @@
+<!doctype html>
+<!--
+  Founders' List confirmation email — DRAFT, pending Yash's approval of the
+  refund terms (same language as #/terms on the site).
+
+  Placeholders ({{name}}, {{tier_price}}, {{tier_name}}, {{payment_link}},
+  {{terms_url}}) use Formspree/Mailchimp-style merge syntax — swap to your
+  provider's syntax when wiring up. See emails/README.md.
+
+  This email is part of the dispute defense: it restates, in writing and in
+  the member's inbox, that the payment is one-time and non-refundable and
+  that the opening date may slip. Do not trim that section.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>You're on the Founders' List — Samaya Sedona</title>
+  </head>
+  <body style="margin:0; padding:0; background:#f5eee9; font-family:Georgia, 'Times New Roman', serif; color:#4c2c16;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5eee9; padding:32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px; background:#ffffff; border:1px solid #9b6e48; border-radius:4px;">
+            <tr>
+              <td style="padding:40px 40px 24px;">
+                <p style="margin:0 0 8px; font-family:Helvetica, Arial, sans-serif; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:#632010; font-weight:bold;">
+                  Samaya Sedona &mdash; Founders' List
+                </p>
+                <h1 style="margin:0 0 16px; font-size:28px; line-height:1.15; color:#4c2c16;">
+                  You're in, {{name}}.
+                </h1>
+                <p style="margin:0 0 16px; font-size:16px; line-height:1.6;">
+                  Your spot on the Founders' List is confirmed at the
+                  <strong>{{tier_price}} {{tier_name}}</strong> tier. One-time,
+                  never monthly &mdash; nothing renews, nothing auto-charges.
+                </p>
+                <p style="margin:0 0 24px; font-size:16px; line-height:1.6;">
+                  This is the only email you'll get until there's something
+                  worth saying.
+                </p>
+                <p style="margin:0 0 32px;">
+                  <a href="{{payment_link}}" style="display:inline-block; background:#632010; color:#f5eee9; text-decoration:none; padding:14px 28px; border-radius:4px; font-family:Helvetica, Arial, sans-serif; font-size:14px; letter-spacing:0.04em;">
+                    Complete your {{tier_price}} payment
+                  </a>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 40px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #9b6e48; border-radius:4px;">
+                  <tr>
+                    <td style="padding:20px 24px;">
+                      <p style="margin:0 0 8px; font-family:Helvetica, Arial, sans-serif; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:#632010; font-weight:bold;">
+                        The terms, one more time
+                      </p>
+                      <p style="margin:0; font-size:14px; line-height:1.6;">
+                        Samaya Sedona is still being built, and our 2027
+                        opening is a target, not a promise. Your payment is
+                        <strong>one-time and non-refundable</strong> &mdash;
+                        you confirmed this at checkout. If the opening date
+                        slips, your place in line and all your perks carry
+                        forward unchanged. The one exception: if the project
+                        is ever permanently cancelled, every dollar is
+                        refunded in full within 30 days. The full
+                        <a href="{{terms_url}}" style="color:#632010;">Terms &amp; Refund Policy</a>
+                        is on the site.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:24px 40px 40px;">
+                <p style="margin:0 0 16px; font-size:16px; line-height:1.6;">
+                  <strong>What happens next:</strong> Brand Stories and Early
+                  Access members start receiving the biweekly build update.
+                  Founders hear the opening date before anyone. Then you book
+                  first, at Founders pricing &mdash; and we meet you on the
+                  deck.
+                </p>
+                <p style="margin:0; font-size:14px; line-height:1.6; color:#9b6e48;">
+                  Questions? Just reply &mdash; or write to
+                  <a href="mailto:hello@samayasedona.com" style="color:#632010;">hello@samayasedona.com</a>.
+                  We read everything and reply like people.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:16px 40px; border-top:1px solid #9b6e48;">
+                <p style="margin:0; font-family:Helvetica, Arial, sans-serif; font-size:11px; line-height:1.6; color:#9b6e48;">
+                  &copy; 2026 Samaya Sedona &middot; Sedona, Arizona &middot;
+                  Every booking begins with a real conversation. All images
+                  are renderings and subject to change.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

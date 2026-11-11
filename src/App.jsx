@@ -5,6 +5,8 @@ import Landing from './pages/Landing.jsx'
 import Gallery from './pages/Gallery.jsx'
 import Campaign from './pages/Campaign.jsx'
 import Privacy from './pages/Privacy.jsx'
+import Terms from './pages/Terms.jsx'
+import Thanks from './pages/Thanks.jsx'
 import './App.css'
 
 const ROUTES = {
@@ -28,6 +30,16 @@ const ROUTES = {
     Page: Privacy,
     overHero: false,
     title: 'Privacy Policy — Samaya Sedona',
+  },
+  '/terms': {
+    Page: Terms,
+    overHero: false,
+    title: 'Terms & Refund Policy — Samaya Sedona',
+  },
+  '/thanks': {
+    Page: Thanks,
+    overHero: false,
+    title: 'Welcome to the List — Samaya Sedona',
   },
 }
 

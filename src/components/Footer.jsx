@@ -28,6 +28,9 @@ export default function Footer() {
               <li>
                 <a href="#/privacy">Privacy</a>
               </li>
+              <li>
+                <a href="#/terms">Terms &amp; Refunds</a>
+              </li>
             </ul>
           </nav>
           <div className="stack">
